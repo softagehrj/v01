@@ -1,0 +1,19 @@
+{
+      "manifest_version": 3,
+      "name": "pdf ex 2",
+      "version": "1.0.0",
+      "description": "A basic example extension with only required keys",
+      "action":{
+            "default_popup": "popup.html"  
+  }, "permissions": [
+    "downloads"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }, "web_accessible_resources": [
+      {
+        "resources": ["build/pdf.min.js", "build/pdf.worker.min.js"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+    }

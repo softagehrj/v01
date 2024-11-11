@@ -4,6 +4,11 @@ console.log(pdfjsLib);
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js';
 
 
+document.addEventListener('DOMContentLoaded', function () {
+  const renameButton = document.getElementById('renameButton');
+  renameButton.addEventListener('click', renamePdf);
+});
+
 async function renamePdf() {
       const pdfUrl = document.getElementById("input_karo").value;; // Predefined PDF URL
 
