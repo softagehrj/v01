@@ -3,11 +3,29 @@ const pdfjsLib = window['pdfjs-dist/build/pdf'];
 console.log(pdfjsLib);
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js';
 
-document.addEventListener('click', async (event) => {
-  if (event.target.tagName === 'A' && event.target.href.endsWith('.pdf')) {
-    event.preventDefault();
-    const url = event.target.href;
 
+
+
+// Listen for messages from content.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "sendUrl") {
+      console.log("Received URL:", message.url);
+
+      // You can now process the URL or pass it to another script
+      sendResponse({ status: "URL received" });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+  
     async function suggestFilenameFromContent(url) {
       try {
         const response = await fetch(url);
@@ -53,12 +71,11 @@ document.addEventListener('click', async (event) => {
 
 
     try {
-      // Suggest a filename based on the content of the file
-      await chrome.downloads.pause(downloadItem.id);
-      const suggestedFilename = await suggestFilenameFromContent(downloadItem.url);
+      
+      const suggestedFilename = await suggestFilenameFromContent(url);
       
       chrome.downloads.download({
-        url: downloadItem.url,
+        url: url,
         filename: suggestedFilename,
         conflictAction: 'uniquify',
       });
@@ -66,16 +83,10 @@ document.addEventListener('click', async (event) => {
   
     } catch (error) {
       console.log('kuch to error aya ', error);
-      const fallbackFilename = new URL(downloadItem.url).pathname.split('/').pop();
+      const fallbackFilename = new URL(url).pathname.split('/').pop();
       chrome.downloads.download({
-        url: downloadItem.url,
+        url: url,
         filename: fallbackFilename,
         conflictAction: 'uniquify',
       });
     }
-      
-    return true;
-
-    
-  }
-});

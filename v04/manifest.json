@@ -5,5 +5,10 @@
       "description": "A basic example extension with only required keys",
       "action":{
             "default_popup": "popup.html"  
-  },"permissions":["downloads"]
+  },"permissions":["downloads"],"content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
     }

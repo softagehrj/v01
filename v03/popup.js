@@ -55,8 +55,7 @@ chrome.downloads.onDeterminingFilename.addListener(async function(downloadItem, 
   }
 
   try {
-    // Suggest a filename based on the content of the file
-    await chrome.downloads.pause(downloadItem.id);
+  
     const suggestedFilename = await suggestFilenameFromContent(downloadItem.url);
     
     chrome.downloads.download({
