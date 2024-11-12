@@ -1,5 +1,5 @@
 document.addEventListener('click', async (event) => {
-
+      console.log('click called');
       if (event.target.tagName === 'A' && event.target.href.endsWith('.pdf')) {
         event.preventDefault();
         const url = event.target.href;
