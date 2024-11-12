@@ -2,6 +2,7 @@
 const pdfjsLib = window['pdfjs-dist/build/pdf'];
 console.log(pdfjsLib);
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js';
+// above lines of code will work on content script and popup as both as windows but 
 
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -11,15 +12,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ status: "URL received" });
   }
 });
-
-
-
-
-
-
-
-
-
 
   
     // async function suggestFilenameFromContent(url) {

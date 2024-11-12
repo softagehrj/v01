@@ -1,18 +1,24 @@
 {
       "manifest_version": 3,
-      "name": "No Downloads",
+      "name": "PDF Download Blocker",
       "version": "1.0",
-      "description": "Prevents downloading of any file.",
+      "description": "Blocks or intercepts PDF downloads.",
       "permissions": [
-        "webRequest",
-        "webRequestBlocking",
-        "<all_urls>"
-      ],
-      "background": {
-        "service_worker": "background.js"
-      },
+        "declarativeNetRequest",
+        "declarativeNetRequestFeedback",
+        "activeTab"
+      ],"action":{
+            "default_popup": "popup.html"  
+  },
       "host_permissions": [
         "<all_urls>"
-      ]
+      ],
+      "declarative_net_request": {
+        "rule_resources": [{
+          "id": "ruleset_1",
+          "enabled": true,
+          "path": "rules.json"
+        }]
+      }
     }
     

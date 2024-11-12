@@ -1,0 +1,12 @@
+[
+      {
+        "id": 1,
+        "priority": 1,
+        "action": { "type": "block" },
+        "condition": {
+          "urlFilter": "*.pdf",
+          "resourceTypes": ["main_frame", "sub_frame", "object", "other"]
+        }
+      }
+    ]
+    
