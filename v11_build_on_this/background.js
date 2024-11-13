@@ -13,23 +13,28 @@
 // Pause 1 millisecound after the download starts
 
 
-chrome.downloads.onDeterminingFilename.addListener( async(downloadItem, suggest) => {
-  // Check the MIME type
+chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
+ 
   if (downloadItem.mime && downloadItem.mime.includes('pdf')) {
-    // Cancel the download if it's a PDF
     chrome.downloads.cancel(downloadItem.id, () => {
       console.log(`Blocked download of file: ${downloadItem.filename}`);
     });
-   
-    suggest({
-      filename: 'x' // Optionally modify the filename here
-    });
+
+    const canceledDownloadData = {
+      url: downloadItem.url,
+      filename: downloadItem.filename,
+      mime: downloadItem.mime,
+    };
+
+    chrome.runtime.sendMessage({ canceledDownload: canceledDownloadData });
 
   } else {
-   
+    // Allow the download
     console.log('default');
-
+    // suggest();
   }
 });
 
-    
+
+
+
