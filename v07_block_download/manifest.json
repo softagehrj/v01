@@ -1,0 +1,12 @@
+{
+      "manifest_version": 3,
+      "name": "PDF Renamer",
+      "version": "1.0",
+      "permissions": [
+        "downloads"
+      ],
+      "background": {
+        "service_worker": "background.js"
+      }
+    }
+    

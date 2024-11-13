@@ -1,7 +1,6 @@
 
 importScripts('build/pdf.min.js');
 pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL('libs/pdf.worker.min.js');
-
 console.log(pdfjsLib);
 
 
@@ -43,6 +42,7 @@ chrome.downloads.onDeterminingFilename.addListener(async function(downloadItem, 
             });
             const result = await session.prompt(content);
             const suggestedFilename = result.replace(/\s+/g, '_') + '.pdf';
+            console.log(suggestedFilename);
             session.destroy();
             return suggestedFilename;
           } else {

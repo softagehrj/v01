@@ -7,7 +7,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js';
 chrome.downloads.onDeterminingFilename.addListener(async function(downloadItem, suggest) {
   
   console.log('hello mfs',downloadItem)
-  console.log(downloadItem.url)
+  console.log(downloadItem)
 
   
   // Function to suggest a filename based on the content of the file

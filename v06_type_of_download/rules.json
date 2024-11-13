@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": { "type": "allow" },
+    "condition": {
+      "urlFilter": "*",
+      "resourceTypes": ["sub_frame", "main_frame"]
+    }
+  }
+]
