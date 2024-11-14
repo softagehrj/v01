@@ -31,10 +31,7 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
       width: 400,
       height: 600
   });
-  setTimeout(() => {
-    chrome.runtime.sendMessage({ canceledDownload: canceledDownloadData });
-}, 100);
-
+  chrome.runtime.sendMessage({ canceledDownload: canceledDownloadData });
   } else {
     // Allow the download
     console.log('default');
