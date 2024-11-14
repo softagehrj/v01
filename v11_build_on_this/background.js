@@ -25,8 +25,15 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
       filename: downloadItem.filename,
       mime: downloadItem.mime,
     };
-
+    chrome.windows.create({
+      url: chrome.runtime.getURL('popup.html'),
+      type: 'popup',
+      width: 400,
+      height: 600
+  });
+  setTimeout(() => {
     chrome.runtime.sendMessage({ canceledDownload: canceledDownloadData });
+}, 100);
 
   } else {
     // Allow the download
