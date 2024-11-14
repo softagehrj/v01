@@ -28,8 +28,8 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
     chrome.windows.create({
       url: chrome.runtime.getURL('popup.html'),
       type: 'popup',
-      width: 400,
-      height: 600
+      width: 200,
+      height: 200
   });
   chrome.runtime.sendMessage({ canceledDownload: canceledDownloadData });
   } else {

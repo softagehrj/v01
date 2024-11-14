@@ -50,8 +50,10 @@ async function suggestFilenameFromContent(url) {
 
 // Listen for messages from background.js
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log('message received',message);
+      console.log('message received',message[url]);
       console.log('sendresponse------>',sendResponse);
+    
+
 //     const { url, filename, mime } = message.canceledDownload;
 
     // Display the blocked download details in the popup
