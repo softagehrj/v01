@@ -2,7 +2,6 @@ const pdfjsLib = window['pdfjs-dist/build/pdf'];
 console.log(pdfjsLib);
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js';
 
-
 async function suggestFilenameFromContent(url) {
       try {
    
@@ -47,23 +46,23 @@ async function suggestFilenameFromContent(url) {
     }
 
 
+document.addEventListener('DOMContentLoaded', () => {
 
-// Listen for messages from background.js
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      console.log('message received',message[url]);
-      console.log('sendresponse------>',sendResponse);
-    
-
-//     const { url, filename, mime } = message.canceledDownload;
-
-    // Display the blocked download details in the popup
-//     console.log(`Blocked Download Received: URL: ${url}, Filename: ${filename}, MIME: ${mime}`);
-//     const container = document.getElementById('blockedDownloads'); // Ensure this element exists in popup.html
-//     const entry = document.createElement('div');
-//     entry.textContent = `Blocked: ${filename} (${mime}) - ${url}`;
-//     container.appendChild(entry);
-
-    // Optionally, send a response back to the background script
-//     sendResponse({ status: 'Message received by popup.js' });
-  
+  chrome.runtime.onConnect.addListener((port) => {
+    console.log('yeahhh');
+    if (port.name === 'popup-connection') {
+        // Listen for messages from the background
+        port.onMessage.addListener((message) => {
+            if (message.canceledDownload) {
+                console.log('Received canceled download data:', message.canceledDownload);
+                // Perform any required actions with the received data
+            }
+        });
+    }
 });
+
+
+
+});
+
+  

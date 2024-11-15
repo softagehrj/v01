@@ -25,13 +25,30 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
       filename: downloadItem.filename,
       mime: downloadItem.mime,
     };
-    chrome.windows.create({
-      url: chrome.runtime.getURL('popup.html'),
-      type: 'popup',
-      width: 200,
-      height: 200
-  });
-  chrome.runtime.sendMessage({ canceledDownload: canceledDownloadData });
+    // console.log(canceledDownloadData);
+
+    chrome.windows.create(
+      {
+          url: chrome.runtime.getURL('popup.html'),
+          type: 'popup',
+          width: 400,
+          height: 600,
+      },
+      () => {
+          
+        setTimeout(() => {
+          const port = chrome.runtime.connect({ name: 'popup-connection' });
+          port.postMessage({ canceledDownload: canceledDownloadData });
+
+          port.onDisconnect.addListener(() => {
+            console.log('Disconnected from popup');
+          });
+        }, 1000);
+
+      }
+  );
+  
+
   } else {
     // Allow the download
     console.log('default');
