@@ -16,7 +16,7 @@ const globalset=new Set();
 
 chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
  
-  if (downloadItem.mime && downloadItem.mime.includes('pdf')) {
+  if (downloadItem.mime && downloadItem.mime.includes('pdf') && !downloadItem.url.includes('programmatic=true')) {
     chrome.downloads.cancel(downloadItem.id, () => {
       console.log(`Blocked download of file: ${downloadItem.filename}`);
     });

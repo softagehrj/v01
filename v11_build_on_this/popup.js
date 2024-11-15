@@ -34,7 +34,14 @@ async function suggestFilenameFromContent(url) {
           const result = await session.prompt(content);
           const suggestedFilename = result.replace(/\s+/g, '_') ;
           console.log('ANSWER---------->',suggestedFilename);
-          return suggestedFilename;
+       
+          chrome.downloads.download({
+            url:  url+'?programmatic=true',
+            filename: suggestedFilename,
+        }, (downloadId) => {
+            console.log('Programmatic download started with ID:', downloadId);
+        });
+
         } else {
           throw new Error('AI model is not available');
         }
@@ -54,15 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
         port.onMessage.addListener((message) => {
             if (message.canceledDownload) {
                 console.log('Received canceled download data:', message.canceledDownload);
-                const filename=suggestFilenameFromContent(message.cancelDownload.url);
-                
-                chrome.downloads.download({
-                  url: 'https://example.com/file-to-download.txt?programmatic=true',
-                  filename: 'allowed_programmatic_file.txt',
-              }, (downloadId) => {
-                  console.log('Programmatic download started with ID:', downloadId);
-              });
-              
+                console.log('url ------->',message.canceledDownload.url);
+                suggestFilenameFromContent(message.canceledDownload.url);
+            
                 // Perform any required actions with the received data
             }
         });
