@@ -34,13 +34,21 @@ async function suggestFilenameFromContent(url) {
           const result = await session.prompt(content);
           const suggestedFilename = result.replace(/\s+/g, '_') ;
           console.log('ANSWER---------->',suggestedFilename);
-       
-          chrome.downloads.download({
-            url:  url+'?programmatic=true',
-            filename: suggestedFilename,
-        }, (downloadId) => {
-            console.log('Programmatic download started with ID:', downloadId);
+
+       //-------------idhar se download chalu hua hai bc-----------
+          document.getElementById('isme_dalo').textContent=suggestedFilename;
+          document.getElementById('press_me').addEventListener('click', function() {
+            
+            chrome.downloads.download({
+              url:  url+'?programmatic=true',
+              filename: suggestedFilename,
+          }, (downloadId) => {
+              console.log('Programmatic download started with ID:', downloadId);
+          });
+  
+
         });
+        //---------------------------------
 
         } else {
           throw new Error('AI model is not available');
