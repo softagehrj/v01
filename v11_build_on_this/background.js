@@ -12,6 +12,7 @@
 // Pause the download after a delay
 // Pause 1 millisecound after the download starts
 
+const globalset=new Set();
 
 chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
  

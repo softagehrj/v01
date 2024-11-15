@@ -4,7 +4,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js';
 
 async function suggestFilenameFromContent(url) {
       try {
-   
         const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch PDF.');
@@ -55,6 +54,15 @@ document.addEventListener('DOMContentLoaded', () => {
         port.onMessage.addListener((message) => {
             if (message.canceledDownload) {
                 console.log('Received canceled download data:', message.canceledDownload);
+                const filename=suggestFilenameFromContent(message.cancelDownload.url);
+                
+                chrome.downloads.download({
+                  url: 'https://example.com/file-to-download.txt?programmatic=true',
+                  filename: 'allowed_programmatic_file.txt',
+              }, (downloadId) => {
+                  console.log('Programmatic download started with ID:', downloadId);
+              });
+              
                 // Perform any required actions with the received data
             }
         });
