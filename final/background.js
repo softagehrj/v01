@@ -12,11 +12,10 @@
 // Pause the download after a delay
 // Pause 1 millisecound after the download starts
 
-const globalset=new Set();
 
 chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
- 
-  if (downloadItem.mime && downloadItem.mime.includes('pdf') && !downloadItem.url.includes('programmatic=true')) {
+  console.log('download url -------->',downloadItem.url);
+  if (downloadItem.mime && downloadItem.mime.includes('pdf') && !downloadItem.url.startsWith('blob') ) {
     chrome.downloads.cancel(downloadItem.id, () => {
       console.log(`Blocked download of file: ${downloadItem.filename}`);
     });

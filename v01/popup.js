@@ -45,7 +45,7 @@ async function renamePdf() {
         // Create a new Blob with the same content and a new name
         const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
-
+        console.log('bob url=======>',url)
         // Trigger a download of the renamed file
         const a = document.createElement('a');
         a.href = url;

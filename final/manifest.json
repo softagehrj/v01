@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "PDF Download Blocker",
+  "name": "AI file downloader",
   "version": "1.0",
   "description": "Blocks downloads with MIME type application/pdf.",
   "permissions": [
@@ -12,4 +12,5 @@
   "host_permissions": [
     "<all_urls>"
   ]
+
 }

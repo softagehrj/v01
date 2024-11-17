@@ -34,21 +34,22 @@ async function suggestFilenameFromContent(url) {
           const result = await session.prompt(content);
           const suggestedFilename = result.replace(/\s+/g, '_') ;
           console.log('ANSWER---------->',suggestedFilename);
-
-       //-------------idhar se download chalu hua hai bc-----------
           document.getElementById('isme_dalo').textContent=suggestedFilename;
-          document.getElementById('press_me').addEventListener('click', function() {
-            
-            chrome.downloads.download({
-              url:  url+'?programmatic=true',
-              filename: suggestedFilename,
-          }, (downloadId) => {
-              console.log('Programmatic download started with ID:', downloadId);
-          });
-  
+          document.getElementById('press_me').addEventListener('click',()=>{
 
-        });
-        //---------------------------------
+            const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+            const objectURL = URL.createObjectURL(blob);
+      
+            const a = document.createElement('a');
+            a.href = objectURL;
+            a.download = suggestedFilename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(objectURL);
+
+          
+          }); 
 
         } else {
           throw new Error('AI model is not available');
@@ -62,20 +63,22 @@ async function suggestFilenameFromContent(url) {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+ 
   chrome.runtime.onConnect.addListener((port) => {
     console.log('yeahhh');
     if (port.name === 'popup-connection') {
         // Listen for messages from the background
-        port.onMessage.addListener((message) => {
+        port.onMessage.addListener(async (message) => {
             if (message.canceledDownload) {
                 console.log('Received canceled download data:', message.canceledDownload);
                 console.log('url ------->',message.canceledDownload.url);
                 suggestFilenameFromContent(message.canceledDownload.url);
-            
-                // Perform any required actions with the received data
+                  
             }
         });
     }
+
+
 });
 
 
