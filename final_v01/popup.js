@@ -34,6 +34,9 @@ async function suggestFilenameFromContent(url) {
           const result = await session.prompt(content);
           const suggestedFilename = result.replace(/\s+/g, '_') ;
           console.log('ANSWER---------->',suggestedFilename);
+          
+          return [suggestedFilename,typedArray];
+
           document.getElementById('isme_dalo').textContent=suggestedFilename;
           document.getElementById('press_me').addEventListener('click',()=>{
 
@@ -60,29 +63,50 @@ async function suggestFilenameFromContent(url) {
       }
     }
 
+    async function saveFileWithSaveAs(arrayBuffer, suggestedFilename) {
+      try {
+          // Options for the file save dialog
+          const options = {
+              suggestedName: suggestedFilename,
+              types: [
+                  {
+                      description: 'PDF Files',
+                      accept: { 'application/pdf': ['.pdf'] },
+                  },
+              ],
+          };
+  
+          // Show the "Save As" dialog to the user
+          const handle = await window.showSaveFilePicker(options);
+  
+          // Create a writable stream for the selected file
+          const writableStream = await handle.createWritable();
 
-document.addEventListener('DOMContentLoaded', () => {
-
- 
-  chrome.runtime.onConnect.addListener((port) => {
-    console.log('yeahhh');
-    if (port.name === 'popup-connection') {
-        // Listen for messages from the background
-        port.onMessage.addListener(async (message) => {
-            if (message.canceledDownload) {
-                console.log('Received canceled download data:', message.canceledDownload);
-                console.log('url ------->',message.canceledDownload.url);
-                suggestFilenameFromContent(message.canceledDownload.url);
-                  
-            }
-        });
-    }
-
-
-});
+          await writableStream.write(arrayBuffer);
+          await writableStream.close();
+  
+          console.log('File saved successfully.');
+      } catch (err) {
+          console.error('Error saving file:', err);
+      }
+  }
 
 
 
+  document.addEventListener('DOMContentLoaded', async () => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    document.getElementById("click").addEventListener("click", async () => {
+        try {
+            // Fetch and suggest a filename
+            const [sfn, ta] = await suggestFilenameFromContent(tab.url);
+
+            // Immediately trigger the save operation (still in user gesture context)
+            await saveFileWithSaveAs(ta, sfn);
+        } catch (error) {
+            console.error('Error during save operation:', error);
+        }
+    });
 });
 
   

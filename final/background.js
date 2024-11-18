@@ -31,8 +31,10 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
       {
           url: chrome.runtime.getURL('popup.html'),
           type: 'popup',
-          width: 400,
-          height: 600,
+          width: 300,
+          height: 200,
+          // left: Math.floor((window.screen.width - 400) / 2),
+          // top: Math.floor((window.screen.height - 600) / 2)
       },
       () => {
           
@@ -45,8 +47,7 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
           });
         }, 1000);
 
-      }
-  );
+      });
   
 
   } else {
