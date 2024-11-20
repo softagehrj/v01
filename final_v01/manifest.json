@@ -13,19 +13,14 @@
     "default_popup": "popup.html"},
 
     "background": {
-    "service_worker": "service_worker.js",
+    "service_worker": "service-worker.js",
     "type": "module"
   },
   "content_scripts": [
         {
             "matches": ["*://*/*"],
             "js": ["content-script.js"],
-            "run_at": "document_start"
-        }],  
-  "web_accessible_resources": [
-        {
-            "resources": ["build/pdf.worker.min.js"],
-            "matches": ["<all_urls>"]
+            "run_at": "document_end"
         }]
 
 }
