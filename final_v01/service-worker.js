@@ -1,21 +1,46 @@
 let contentPort = null;
+let popupPort=null;
 
 // Listen for connections from content scripts
 chrome.runtime.onConnect.addListener((port) => {
-    console.log("Connected to content script via persistent port.");
-    contentPort = port;
+    if (port.name=== "content-to-background-port"){
+                        console.log("Connected to content script via persistent port.");
+                        contentPort = port;
 
-    // Handle messages from content script
-    port.onMessage.addListener((msg) => {
-        console.log("Message received from content script:", msg);
-    });
+                        // Handle messages from content script
+                        port.onMessage.addListener((msg) => {
+                            console.log("Message received from content script:", msg);
+                            if (popupPort){
+                                popupPort.postMessage(msg);
 
-    // Handle disconnection
-    port.onDisconnect.addListener(() => {
-        console.log("Port disconnected.");
-        contentPort = null;
+                            }else{
+                                console.log('popupPort is null');
+                            }
+                        });
+
+                        // Handle disconnection
+                        port.onDisconnect.addListener(() => {
+                            console.log("Port disconnected.");
+                            contentPort = null;
+                        });
+                    }
+    if (port.name === "popup-to-background-port"){
+
+                        console.log("Connected to popup.js via persistent port.");
+                        popupPort = port;
+
+                        // Handle messages from content script
+                        port.onMessage.addListener((msg) => {
+                            console.log("Message received from content script:", msg);
+                        });
+
+                        // Handle disconnection
+                        port.onDisconnect.addListener(() => {
+                            console.log("Port disconnected.");
+                            popupPort = null;
+                        });
+    }
     });
-});
 
 // Function to fetch filename from URL or headers
 async function getFilenameFromUrlOrHeader(url) {

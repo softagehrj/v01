@@ -2,6 +2,11 @@
 let sfn=null;
 let ta=null;
 
+const pdfjsLib = window['pdfjs-dist/build/pdf'];
+console.log(pdfjsLib);
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js'
+console.log('content-script chala');
+
 async function suggestFilenameFromContent(url) {
   try {
     const response = await fetch(url);
@@ -62,26 +67,20 @@ async function suggestFilenameFromContent(url) {
   }
 }
 
-setTimeout(() => {
+
   const port = chrome.runtime.connect({ name: "content-to-background-port" });
   port.onMessage.addListener(async (msg) => {
     if (msg.action === 'sendUrl' && msg.url) {
         console.log("Received active tab URL from background:", msg.url);
         const [sfn,ta] = await suggestFilenameFromContent(msg.url);
         console.log('suggested ---->',sfn)
+        port.postMessage({
+          action: "content-to-background-port",
+          sfn:sfn , ta:ta
+      });
     
     }
 });
-
-  },1000);
-
-const pdfjsLib = window['pdfjs-dist/build/pdf'];
-console.log(pdfjsLib);
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'build/pdf.worker.min.js';
-
-
-console.log('content-script chala');
-
 
 
 //i want to know the order of execution of this js file line by
