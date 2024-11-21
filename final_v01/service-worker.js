@@ -1,47 +1,34 @@
-let contentPort = null;
+//i think service-worker is perfect for listening to active tabs and whether it is pdf or not !!!
 let popupPort=null;
+let active_tab_id=null;
 
-// Listen for connections from content scripts
 chrome.runtime.onConnect.addListener((port) => {
-    if (port.name=== "content-to-background-port"){
-                        console.log("Connected to content script via persistent port.");
-                        contentPort = port;
 
-                        // Handle messages from content script
-                        port.onMessage.addListener((msg) => {
-                            console.log("Message received from content script:", msg);
-                            if (popupPort){
-                                popupPort.postMessage(msg);
-
-                            }else{
-                                console.log('popupPort is null');
-                            }
-                        });
-
-                        // Handle disconnection
-                        port.onDisconnect.addListener(() => {
-                            console.log("Port disconnected.");
-                            contentPort = null;
-                        });
-                    }
     if (port.name === "popup-to-background-port"){
 
                         console.log("Connected to popup.js via persistent port.");
                         popupPort = port;
 
-                        // Handle messages from content script
+                        setInterval(()=>{
+                            if (active_tab_id){
+                                sendActiveTabUrlAndFilename(active_tab_id);
+                            }
+                        },100);
+
+                        
                         port.onMessage.addListener((msg) => {
-                            console.log("Message received from content script:", msg);
+                            console.log("Message received from popup.js:", msg);
                         });
 
                         // Handle disconnection
                         port.onDisconnect.addListener(() => {
-                            console.log("Port disconnected.");
+                            console.log("popup.js Port disconnected.");
                             popupPort = null;
                         });
     }
     });
 
+   
 // Function to fetch filename from URL or headers
 async function getFilenameFromUrlOrHeader(url) {
     try {
@@ -66,8 +53,8 @@ async function getFilenameFromUrlOrHeader(url) {
 
 // Function to send active tab URL and filename to the content script
 async function sendActiveTabUrlAndFilename(tabId) {
-    if (contentPort) {
-        console.log('content port ready');
+    if (popupPort) {
+        console.log('popupport ready mf');
         try {
             const tab = await chrome.tabs.get(tabId);
             const activeTabUrl = tab.url;
@@ -89,7 +76,8 @@ async function sendActiveTabUrlAndFilename(tabId) {
                 url: activeTabUrl,
                 filename: filename,
             });
-            contentPort.postMessage({
+            //message bhejne se phle connect to krlo
+            popupPort.postMessage({
                 action: 'sendUrlAndFilename',
                 url: activeTabUrl,
                 filename: filename,
@@ -98,12 +86,13 @@ async function sendActiveTabUrlAndFilename(tabId) {
             console.error('Error sending URL and filename:', error);
         }
     }else{
-        console.log('content port not ready');
+        console.log('popup port not ready');
     }
 }
 
 // Listen for tab activation (change of active tab)
 chrome.tabs.onActivated.addListener((activeInfo) => {
+    active_tab_id=activeInfo.tabId;
     console.log("Tab changed, sending URL and filename...");
     sendActiveTabUrlAndFilename(activeInfo.tabId);
 });
@@ -111,6 +100,7 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 // Send the active tab's URL and filename when the extension is first loaded
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length > 0) {
+        active_tab_id=tabs[0].id;
         sendActiveTabUrlAndFilename(tabs[0].id);
     }
 });

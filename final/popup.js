@@ -70,15 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Listen for messages from the background
         port.onMessage.addListener(async (message) => {
 
-            document.getElementById('default_filename').textContent=message.filename;
-
             if (message.canceledDownload) {
-                console.log('Received canceled download data:', message.canceledDownload);
-                console.log('url ------->',message.canceledDownload.url);
+                document.getElementById('default_filename').textContent=message.canceledDownload.filename;
+                // // console.log('file----->',message);
+                // console.log('Received canceled download data:', message.canceledDownload);
+                // // console.log('url ------->',message.canceledDownload.url);
                 suggestFilenameFromContent(message.canceledDownload.url);
-
-
-                  
+   
             }
         });
     }

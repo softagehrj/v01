@@ -8,7 +8,7 @@ chrome.system.display.getInfo((displays) => {
 });
 
 chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
-  console.log('download url -------->',downloadItem.url);
+  console.log('download-------->',downloadItem.filename);
   if (downloadItem.mime && downloadItem.mime.includes('pdf') && !downloadItem.url.startsWith('blob') ) {
     chrome.downloads.cancel(downloadItem.id, () => {
       console.log(`Blocked download of file: ${downloadItem.filename}`);
