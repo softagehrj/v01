@@ -69,10 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (port.name === 'popup-connection') {
         // Listen for messages from the background
         port.onMessage.addListener(async (message) => {
+
+            document.getElementById('default_filename').textContent=message.filename;
+
             if (message.canceledDownload) {
                 console.log('Received canceled download data:', message.canceledDownload);
                 console.log('url ------->',message.canceledDownload.url);
                 suggestFilenameFromContent(message.canceledDownload.url);
+
+
                   
             }
         });

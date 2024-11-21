@@ -1,17 +1,11 @@
+let screenwidth=null;
+let screenheight=null;
 
-// chrome.downloads.download({
-//       url: `https://www.uscis.gov/sites/default/files/document/lesson-plans/Government_and_You_handouts.pdf`,
-//       filename: 'x',
-//     });
-
-
-// chrome.downloads.onCreated.addListener((downloadItem) => {
-// console.log(downloadItem);
-// });
-
-// Pause the download after a delay
-// Pause 1 millisecound after the download starts
-
+chrome.system.display.getInfo((displays) => {
+  const primaryDisplay = displays[0];
+  screenwidth = primaryDisplay.workArea.width;
+  screenheight = primaryDisplay.workArea.height;
+});
 
 chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
   console.log('download url -------->',downloadItem.url);
@@ -33,8 +27,8 @@ chrome.downloads.onDeterminingFilename.addListener((downloadItem, suggest) => {
           type: 'popup',
           width: 300,
           height: 200,
-          // left: Math.floor((window.screen.width - 400) / 2),
-          // top: Math.floor((window.screen.height - 600) / 2)
+          top:Math.round((screenheight-200)/2),
+          left:Math.round((screenwidth-300)/2) 
       },
       () => {
           
