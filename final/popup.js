@@ -34,6 +34,9 @@ async function suggestFilenameFromContent(url) {
           const result = await session.prompt(content);
           const suggestedFilename = result.replace(/\s+/g, '_') ;
           console.log('ANSWER---------->',suggestedFilename);
+          return suggestedFilename;
+
+          
           document.getElementById('isme_dalo').textContent=suggestedFilename;
           document.getElementById('press_me').addEventListener('click',()=>{
 
@@ -62,30 +65,43 @@ async function suggestFilenameFromContent(url) {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+          const tabs = document.querySelectorAll('.tab');
+          console.log('tabs------>',tabs);
+          const content = document.getElementById('content');
+          console.log('contnet---->',content);
+          const saveButton = document.getElementById('saveButton');
+          console.log('savebutton----->',saveButton);
 
- 
-  chrome.runtime.onConnect.addListener((port) => {
-    console.log('yeahhh');
-    if (port.name === 'popup-connection') {
-        // Listen for messages from the background
-        port.onMessage.addListener(async (message) => {
 
-            if (message.canceledDownload) {
-                document.getElementById('default_filename').textContent=message.canceledDownload.filename;
-                // // console.log('file----->',message);
-                // console.log('Received canceled download data:', message.canceledDownload);
-                // // console.log('url ------->',message.canceledDownload.url);
-                suggestFilenameFromContent(message.canceledDownload.url);
-   
-            }
+          tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
         });
-    }
+
+        saveButton.addEventListener('click', () => {
+
+            alert(`File saved as: ${content.textContent.split(': ')[1]}`);
+        });
+
+          chrome.runtime.onConnect.addListener((port) => {
+          console.log('yeahhh');
+          if (port.name === 'popup-connection') {
+              // Listen for messages from the background
+              port.onMessage.addListener(async (message) => {
+
+                  if (message.canceledDownload) {
+                    const element = document.querySelector('[data-content="default"]');
+                    element.textContent=message.canceledDownload.filename;
+  
+                      suggestFilenameFromContent(message.canceledDownload.url);
+        
+                  }
+              });
+          }
 
 
 });
-
-
-
-});
-
+          });
   
